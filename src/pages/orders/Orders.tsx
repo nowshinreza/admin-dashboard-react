@@ -4,7 +4,7 @@ import DataTable from "../../components/dataTable/DataTable";
 import Add from "../../components/add/Add";
 import { GridColDef } from "@mui/x-data-grid";
 
-const orders = [
+const initialOrders = [
   {
     id: 1,
     customer: "Adnan Parvez",
@@ -150,8 +150,34 @@ const columns: GridColDef[] = [
 const Orders = () => {
   const [open, setOpen] = useState(false);
 
+  const [rows, setRows] = useState(initialOrders);
+
+  // DELETE
+  const handleDelete = (id: number) => {
+    setRows((prev) =>
+      prev.filter((order) => order.id !== id)
+    );
+  };
+
+  // ADD
+  const handleAdd = (newOrder: Record<string, string>) => {
+    setRows((prev) => [
+      ...prev,
+      {
+        ...newOrder,
+        id: prev.length
+          ? Math.max(...prev.map((order) => order.id)) + 1
+          : 1,
+        quantity: Number(newOrder.quantity),
+      },
+    ]);
+
+    setOpen(false);
+  };
+
   return (
     <div className="orders">
+
       <div className="info">
         <h1>Orders</h1>
 
@@ -163,16 +189,19 @@ const Orders = () => {
       <DataTable
         slug="orders"
         columns={columns}
-        rows={orders}
+        rows={rows}
+        onDelete={handleDelete}
       />
 
       {open && (
         <Add
-          slug="order"
+          slug="orders"
           columns={columns}
           setOpen={setOpen}
+          onAdd={handleAdd}
         />
       )}
+
     </div>
   );
 };
