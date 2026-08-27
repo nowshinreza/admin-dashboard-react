@@ -4,7 +4,7 @@ import DataTable from "../../components/dataTable/DataTable";
 import Add from "../../components/add/Add";
 import { GridColDef } from "@mui/x-data-grid";
 
-const posts = [
+const initialPosts = [
   {
     id: 1,
     title: "Big Eid Sale 2026",
@@ -144,6 +144,35 @@ const columns: GridColDef[] = [
 const Posts = () => {
   const [open, setOpen] = useState(false);
 
+  const [rows, setRows] = useState(initialPosts);
+
+  // DELETE
+  const handleDelete = (id: number) => {
+    setRows((prev) =>
+      prev.filter((post) => post.id !== id)
+    );
+  };
+
+  // ADD
+  const handleAdd = (newPost: Record<string, string>) => {
+    setRows((prev) => [
+      ...prev,
+      {
+        id: prev.length
+          ? Math.max(...prev.map((post) => post.id)) + 1
+          : 1,
+        title: newPost.title || "",
+        author: newPost.author || "",
+        category: newPost.category || "",
+        status: newPost.status || "",
+        views: Number(newPost.views) || 0,
+        createdAt: newPost.createdAt || "",
+      },
+    ]);
+
+    setOpen(false);
+  };
+
   return (
     <div className="posts">
       <div className="info">
@@ -157,7 +186,8 @@ const Posts = () => {
       <DataTable
         slug="posts"
         columns={columns}
-        rows={posts}
+        rows={rows}
+        onDelete={handleDelete}
       />
 
       {open && (
@@ -165,6 +195,7 @@ const Posts = () => {
           slug="post"
           columns={columns}
           setOpen={setOpen}
+          onAdd={handleAdd}
         />
       )}
     </div>

@@ -4,7 +4,18 @@ import DataTable from "../../components/dataTable/DataTable";
 import Add from "../../components/add/Add";
 import { GridColDef } from "@mui/x-data-grid";
 
-const initialOrders = [
+type Order = {
+  id: number;
+  customer: string;
+  product: string;
+  quantity: number;
+  total: string;
+  status: string;
+  payment: string;
+  orderDate: string;
+};
+
+const initialOrders: Order[] = [
   {
     id: 1,
     customer: "Adnan Parvez",
@@ -149,8 +160,7 @@ const columns: GridColDef[] = [
 
 const Orders = () => {
   const [open, setOpen] = useState(false);
-
-  const [rows, setRows] = useState(initialOrders);
+  const [rows, setRows] = useState<Order[]>(initialOrders);
 
   // DELETE
   const handleDelete = (id: number) => {
@@ -161,23 +171,27 @@ const Orders = () => {
 
   // ADD
   const handleAdd = (newOrder: Record<string, string>) => {
-    setRows((prev) => [
-      ...prev,
-      {
-        ...newOrder,
-        id: prev.length
-          ? Math.max(...prev.map((order) => order.id)) + 1
-          : 1,
-        quantity: Number(newOrder.quantity),
-      },
-    ]);
+    const newId = rows.length
+      ? Math.max(...rows.map((order) => order.id)) + 1
+      : 1;
 
+    const order: Order = {
+      id: newId,
+      customer: newOrder.customer || "",
+      product: newOrder.product || "",
+      quantity: Number(newOrder.quantity) || 0,
+      total: newOrder.total || "",
+      status: newOrder.status || "",
+      payment: newOrder.payment || "",
+      orderDate: newOrder.orderDate || "",
+    };
+
+    setRows((prev) => [...prev, order]);
     setOpen(false);
   };
 
   return (
     <div className="orders">
-
       <div className="info">
         <h1>Orders</h1>
 
@@ -201,7 +215,6 @@ const Orders = () => {
           onAdd={handleAdd}
         />
       )}
-
     </div>
   );
 };

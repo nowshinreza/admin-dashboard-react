@@ -1,51 +1,16 @@
 import { GridColDef } from "@mui/x-data-grid";
 import "./add.scss";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 type Props = {
   slug: string;
   columns: GridColDef[];
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onAdd: (data: Record<string, string>) => void;
 };
 
 const Add = (props: Props) => {
-  const queryClient = useQueryClient();
-
   const [formData, setFormData] = useState<Record<string, string>>({});
-
-  const mutation = useMutation({
-    mutationFn: async (data: Record<string, string>) => {
-      const response = await fetch(
-        `http://localhost:8800/api/${props.slug}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to add item");
-      }
-
-      return response.json();
-    },
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`all${props.slug}`],
-      });
-
-      props.setOpen(false);
-    },
-
-    onError: (error) => {
-      console.error("Add error:", error);
-    },
-  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -61,7 +26,7 @@ const Add = (props: Props) => {
   ) => {
     e.preventDefault();
 
-    mutation.mutate(formData);
+    props.onAdd(formData);
   };
 
   return (
@@ -89,19 +54,21 @@ const Add = (props: Props) => {
                 <label>{column.headerName}</label>
 
                 <input
-                  type={column.type || "text"}
+                  type={
+                    column.type === "number"
+                      ? "number"
+                      : "text"
+                  }
                   name={column.field}
                   placeholder={column.field}
                   onChange={handleChange}
+                  required
                 />
               </div>
             ))}
 
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-          >
-            {mutation.isPending ? "Adding..." : "Send"}
+          <button type="submit">
+            Add
           </button>
         </form>
 

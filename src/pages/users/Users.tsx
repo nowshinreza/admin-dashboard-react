@@ -1,51 +1,60 @@
+import { useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/dataTable/DataTable";
-import "./Users.scss";
-import { useState } from "react";
 import Add from "../../components/add/Add";
 import { userRows } from "../../data";
-// import { useQuery } from "@tanstack/react-query";
+import "./Users.scss";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
+
   {
     field: "img",
     headerName: "Avatar",
     width: 100,
-    renderCell: (params) => {
-      return <img src={params.row.img || "/noavatar.png"} alt="" />;
-    },
+    renderCell: (params) => (
+      <img
+        src={params.row.img || "/noavatar.png"}
+        alt="Avatar"
+      />
+    ),
   },
+
   {
     field: "firstName",
-    type: "string",
     headerName: "First name",
     width: 150,
+    type: "string",
   },
+
   {
     field: "lastName",
-    type: "string",
     headerName: "Last name",
     width: 150,
+    type: "string",
   },
+
   {
     field: "email",
-    type: "string",
     headerName: "Email",
     width: 200,
+    type: "string",
   },
+
   {
     field: "phone",
-    type: "string",
     headerName: "Phone",
     width: 200,
+    type: "string",
   },
+
   {
     field: "createdAt",
     headerName: "Created At",
     width: 200,
     type: "string",
   },
+
   {
     field: "verified",
     headerName: "Verified",
@@ -57,23 +66,62 @@ const columns: GridColDef[] = [
 const Users = () => {
   const [open, setOpen] = useState(false);
 
-  
+  const [rows, setRows] = useState(userRows);
+
+  // DELETE
+  const handleDelete = (id: number) => {
+    setRows((prev) =>
+      prev.filter((user) => user.id !== id)
+    );
+  };
+
+  // ADD
+  const handleAdd = (newUser: Record<string, string>) => {
+    setRows((prev) => [
+      ...prev,
+      {
+        id: prev.length
+          ? Math.max(...prev.map((user) => user.id)) + 1
+          : 1,
+
+        firstName: newUser.firstName || "",
+        lastName: newUser.lastName || "",
+        email: newUser.email || "",
+        phone: newUser.phone || "",
+        createdAt: newUser.createdAt || "",
+        verified: newUser.verified === "true",
+        img: "",
+      },
+    ]);
+
+    setOpen(false);
+  };
 
   return (
     <div className="users">
       <div className="info">
         <h1>Users</h1>
-        <button onClick={() => setOpen(true)}>Add New User</button>
-      </div>
-      <DataTable slug="users" columns={columns} rows={userRows} />
-      {/* TEST THE API */}
 
-      {/* {isLoading ? (
-        "Loading..."
-      ) : (
-        <DataTable slug="users" columns={columns} rows={data} />
-      )} */}
-      {open && <Add slug="user" columns={columns} setOpen={setOpen} />}
+        <button onClick={() => setOpen(true)}>
+          Add New User
+        </button>
+      </div>
+
+      <DataTable
+        slug="users"
+        columns={columns}
+        rows={rows}
+        onDelete={handleDelete}
+      />
+
+      {open && (
+        <Add
+          slug="user"
+          columns={columns}
+          setOpen={setOpen}
+          onAdd={handleAdd}
+        />
+      )}
     </div>
   );
 };
