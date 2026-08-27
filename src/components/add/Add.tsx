@@ -41,16 +41,24 @@ const Add = (props: Props) => {
 
       props.setOpen(false);
     },
+
+    onError: (error) => {
+      console.error("Add error:", error);
+    },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
 
     mutation.mutate(formData);
@@ -59,6 +67,7 @@ const Add = (props: Props) => {
   return (
     <div className="add">
       <div className="modal">
+
         <span
           className="close"
           onClick={() => props.setOpen(false)}
@@ -88,8 +97,14 @@ const Add = (props: Props) => {
               </div>
             ))}
 
-          <button type="submit">Send</button>
+          <button
+            type="submit"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? "Adding..." : "Send"}
+          </button>
         </form>
+
       </div>
     </div>
   );
