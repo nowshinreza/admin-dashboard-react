@@ -204,7 +204,7 @@ const Orders = () => {
         slug="orders"
         columns={columns}
         rows={rows}
-        onDelete={handleDelete}
+        
       />
 
       {open && (

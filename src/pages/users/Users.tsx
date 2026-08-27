@@ -6,8 +6,11 @@ import { userRows } from "../../data";
 import "./Users.scss";
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
-
+  {
+    field: "id",
+    headerName: "ID",
+    width: 90,
+  },
   {
     field: "img",
     headerName: "Avatar",
@@ -19,42 +22,36 @@ const columns: GridColDef[] = [
       />
     ),
   },
-
   {
     field: "firstName",
     headerName: "First name",
     width: 150,
     type: "string",
   },
-
   {
     field: "lastName",
     headerName: "Last name",
     width: 150,
     type: "string",
   },
-
   {
     field: "email",
     headerName: "Email",
     width: 200,
     type: "string",
   },
-
   {
     field: "phone",
     headerName: "Phone",
     width: 200,
     type: "string",
   },
-
   {
     field: "createdAt",
     headerName: "Created At",
     width: 200,
     type: "string",
   },
-
   {
     field: "verified",
     headerName: "Verified",
@@ -65,17 +62,14 @@ const columns: GridColDef[] = [
 
 const Users = () => {
   const [open, setOpen] = useState(false);
-
   const [rows, setRows] = useState(userRows);
 
-  // DELETE
   const handleDelete = (id: number) => {
     setRows((prev) =>
       prev.filter((user) => user.id !== id)
     );
   };
 
-  // ADD
   const handleAdd = (newUser: Record<string, string>) => {
     setRows((prev) => [
       ...prev,
@@ -83,7 +77,6 @@ const Users = () => {
         id: prev.length
           ? Math.max(...prev.map((user) => user.id)) + 1
           : 1,
-
         firstName: newUser.firstName || "",
         lastName: newUser.lastName || "",
         email: newUser.email || "",
@@ -111,7 +104,6 @@ const Users = () => {
         slug="users"
         columns={columns}
         rows={rows}
-        onDelete={handleDelete}
       />
 
       {open && (

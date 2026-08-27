@@ -187,7 +187,7 @@ const Posts = () => {
         slug="posts"
         columns={columns}
         rows={rows}
-        onDelete={handleDelete}
+        
       />
 
       {open && (

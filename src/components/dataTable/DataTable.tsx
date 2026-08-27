@@ -5,47 +5,36 @@ import {
 } from "@mui/x-data-grid";
 import "./dataTable.scss";
 import { Link } from "react-router-dom";
+// import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   columns: GridColDef[];
   rows: object[];
   slug: string;
-  onDelete?: (id: number) => void;
 };
 
 const DataTable = (props: Props) => {
+
+ 
+
   const handleDelete = (id: number) => {
-    if (!props.onDelete) return;
-
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this item?"
-    );
-
-    if (confirmed) {
-      props.onDelete(id);
-    }
+    //delete the item
+    // mutation.mutate(id)
   };
 
   const actionColumn: GridColDef = {
     field: "action",
     headerName: "Action",
     width: 200,
-
     renderCell: (params) => {
       return (
         <div className="action">
           <Link to={`/${props.slug}/${params.row.id}`}>
-            <img src="/view.svg" alt="View" />
+            <img src="/view.svg" alt="" />
           </Link>
-
-          {props.onDelete && (
-            <div
-              className="delete"
-              onClick={() => handleDelete(params.row.id)}
-            >
-              <img src="/delete.svg" alt="Delete" />
-            </div>
-          )}
+          <div className="delete" onClick={() => handleDelete(params.row.id)}>
+            <img src="/delete.svg" alt="" />
+          </div>
         </div>
       );
     },
@@ -64,18 +53,14 @@ const DataTable = (props: Props) => {
             },
           },
         }}
-        slots={{
-          toolbar: GridToolbar,
-        }}
+        slots={{ toolbar: GridToolbar }}
         slotProps={{
           toolbar: {
             showQuickFilter: true,
-            quickFilterProps: {
-              debounceMs: 500,
-            },
+            quickFilterProps: { debounceMs: 500 },
           },
         }}
-        pageSizeOptions={[5, 10, 20]}
+        pageSizeOptions={[5]}
         checkboxSelection
         disableRowSelectionOnClick
         disableColumnFilter

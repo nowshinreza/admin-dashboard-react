@@ -108,7 +108,7 @@ const Products = () => {
         slug="products"
         columns={columns}
         rows={rows}
-        onDelete={handleDelete}
+        
       />
 
       {open && (
