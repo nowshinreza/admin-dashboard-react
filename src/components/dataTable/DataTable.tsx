@@ -10,12 +10,18 @@ type Props = {
   columns: GridColDef[];
   rows: object[];
   slug: string;
-  onDelete: (id: number) => void;
+  onDelete?: (id: number) => void;
 };
 
 const DataTable = (props: Props) => {
   const handleDelete = (id: number) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
+    if (!props.onDelete) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this item?"
+    );
+
+    if (confirmed) {
       props.onDelete(id);
     }
   };
@@ -32,12 +38,14 @@ const DataTable = (props: Props) => {
             <img src="/view.svg" alt="View" />
           </Link>
 
-          <div
-            className="delete"
-            onClick={() => handleDelete(params.row.id)}
-          >
-            <img src="/delete.svg" alt="Delete" />
-          </div>
+          {props.onDelete && (
+            <div
+              className="delete"
+              onClick={() => handleDelete(params.row.id)}
+            >
+              <img src="/delete.svg" alt="Delete" />
+            </div>
+          )}
         </div>
       );
     },
@@ -56,7 +64,9 @@ const DataTable = (props: Props) => {
             },
           },
         }}
-        slots={{ toolbar: GridToolbar }}
+        slots={{
+          toolbar: GridToolbar,
+        }}
         slotProps={{
           toolbar: {
             showQuickFilter: true,
