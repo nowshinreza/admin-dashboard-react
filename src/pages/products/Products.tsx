@@ -6,57 +6,52 @@ import { GridColDef } from "@mui/x-data-grid";
 import { products } from "../../data";
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
-
+  {
+    field: "id",
+    headerName: "ID",
+    width: 90,
+  },
   {
     field: "img",
     headerName: "Image",
     width: 100,
-    renderCell: (params) => {
-      return (
-        <img
-          src={params.row.img || "/noavatar.png"}
-          alt=""
-        />
-      );
-    },
+    renderCell: (params) => (
+      <img
+        src={params.row.img || "/noavatar.png"}
+        alt=""
+      />
+    ),
   },
-
   {
     field: "title",
     type: "string",
     headerName: "Title",
     width: 250,
   },
-
   {
     field: "color",
     type: "string",
     headerName: "Color",
     width: 150,
   },
-
   {
     field: "price",
     type: "string",
     headerName: "Price",
     width: 200,
   },
-
   {
     field: "producer",
     headerName: "Producer",
     type: "string",
     width: 200,
   },
-
   {
     field: "createdAt",
     headerName: "Created At",
     width: 200,
     type: "string",
   },
-
   {
     field: "inStock",
     headerName: "In Stock",
@@ -67,18 +62,14 @@ const columns: GridColDef[] = [
 
 const Products = () => {
   const [open, setOpen] = useState(false);
-
-  // Store products in React state
   const [rows, setRows] = useState(products);
 
-  // Delete product
   const handleDelete = (id: number) => {
     setRows((prev) =>
       prev.filter((product) => product.id !== id)
     );
   };
 
-  // Add product
   const handleAdd = (newProduct: any) => {
     setRows((prev) => [
       ...prev,
@@ -95,7 +86,6 @@ const Products = () => {
 
   return (
     <div className="products">
-
       <div className="info">
         <h1>Products</h1>
 
@@ -108,7 +98,6 @@ const Products = () => {
         slug="products"
         columns={columns}
         rows={rows}
-        
       />
 
       {open && (
@@ -119,7 +108,6 @@ const Products = () => {
           onAdd={handleAdd}
         />
       )}
-
     </div>
   );
 };
